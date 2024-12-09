@@ -1,0 +1,63 @@
+.parent {
+    -fx-background-color: #ededed;
+}
+
+.sidebar {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+}
+
+.sidebar-btn {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-text-alignment: left;
+    -fx-font-size: 16px;
+    -fx-content-display: left;
+    -fx-alignment: center;
+    -fx-effect: none;
+}
+
+.sidebar-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.prisoner-table {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10px;
+}
+
+.prisoner-title-table {
+    -fx-font-size: 16px;
+    -fx-border-color: transparent transparent #ededed transparent;
+}
+
+.prisoner-card {
+    -fx-background-color: #ffffff;
+}
+
+.prisoner-card:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.danger {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 5px;
+}
+
+.safe {
+    -fx-background-color: #00ff00;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 5px;
+}
+
+.table-scroll {
+    -fx-border-color: transparent transparent transparent transparent;
+}
