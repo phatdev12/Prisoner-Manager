@@ -1,0 +1,4 @@
+(101, 'Phong Giam 101', 5),
+(102, 'Phong Giam 102', 6),
+(103, 'Phong Giam 103', 4),
+(104, 'Phong Giam 104', 3),

@@ -15,8 +15,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="parent" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:controller="prisoner.prisonermanager.AppController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" styleClass="parent" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <left>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="sidebar" stylesheets="@style.css" BorderPane.alignment="CENTER">
          <children>
@@ -70,7 +69,7 @@
       <DropShadow height="0.0" radius="0.0" width="0.0" />
    </effect>
    <center>
-      <VBox minWidth="100.0" prefHeight="200.0" prefWidth="100.0" styleClass="prisoner-table" stylesheets="@style.css" BorderPane.alignment="CENTER">
+      <VBox  minWidth="100.0" prefHeight="200.0" prefWidth="100.0" styleClass="prisoner-table" stylesheets="@style.css" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </BorderPane.margin>
@@ -80,33 +79,11 @@
                   <Insets left="18.0" />
                </padding>
             </Label>
-            <ScrollPane maxWidth="1.7976931348623157E308" minWidth="675.0" prefHeight="600.0" prefWidth="675.0" stylesheets="@style.css">
+            <ScrollPane id="content" maxWidth="1.7976931348623157E308" minWidth="675.0" prefHeight="600.0" prefWidth="675.0" stylesheets="@style.css">
               <content>
                 <AnchorPane>
                      <children>
-                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="670.0" prefHeight="131.0" prefWidth="670.0">
-                           <children>
-                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="200.0" styleClass="prisoner-card" stylesheets="@style.css" text="Ngô Bá khá">
-                                 <padding>
-                                    <Insets left="20.0" right="20.0" />
-                                 </padding>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <graphic>
-                                    <Button mnemonicParsing="false" styleClass="danger" stylesheets="@style.css" text="Nguy hiểm" />
-                                 </graphic>
-                              </Button>
-                              <Button layoutX="10.0" layoutY="10.0" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="200.0" styleClass="prisoner-card" stylesheets="@style.css" text="Ngô Bá khá" VBox.vgrow="ALWAYS">
-                                 <padding>
-                                    <Insets left="20.0" right="20.0" />
-                                 </padding>
-                                 <graphic>
-                                    <Button mnemonicParsing="false" styleClass="safe" stylesheets="@style.css" text="An toàn" />
-                                 </graphic>
-                              </Button>
-                           </children>
-                        </VBox>
+                        <VBox fx:id="container" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="670.0" prefHeight="131.0" prefWidth="670.0" />
                      </children>
                   </AnchorPane>
               </content>
