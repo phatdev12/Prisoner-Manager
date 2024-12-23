@@ -72,19 +72,19 @@
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </BorderPane.margin>
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0">
+            <HBox fx:id="root" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="previousButton" mnemonicParsing="false" prefHeight="64.0" prefWidth="50.0" text="&lt;">
+                  <Button fx:id="previousButton" mnemonicParsing="false" prefHeight="64.0" prefWidth="50.0" styleClass="sidebar" text="&lt;">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="49.0" text="&gt;">
+                  <Button fx:id="nextButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="49.0" styleClass="sidebar" text="&gt;">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Button>
-                  <Label prefHeight="59.0" prefWidth="543.0" styleClass="prisoner-title-table" stylesheets="@style.css" text="Trang chủ">
+                  <Label fx:id="statusName" prefHeight="59.0" prefWidth="543.0" styleClass="prisoner-title-table" stylesheets="@style.css" text="Trang chủ">
                      <padding>
                         <Insets left="18.0" />
                      </padding>

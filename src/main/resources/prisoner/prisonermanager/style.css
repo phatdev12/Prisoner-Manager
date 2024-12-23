@@ -61,3 +61,11 @@
 .table-scroll {
     -fx-border-color: transparent transparent transparent transparent;
 }
+
+.btn-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+}

@@ -10,15 +10,15 @@ public class Database {
     public ArrayList<Room> rooms = new ArrayList<Room>();
 
     public Database() {
-        String driverName = "com.mysql.cj.jdbc.Driver";
-        String jdbcUrl = "jdbc:mysql://localhost:3306/prisoner";
-        String user="root";
-        String pass="root";
         try {
+            String driverName = "com.mysql.cj.jdbc.Driver";
             Class.forName(driverName);
-            System.out.println("Connecting to the database: "+jdbcUrl);
+            String jdbcUrl = "jdbc:mysql://localhost:3307/prisoner";
+            System.out.println("Connecting to the database: "+ jdbcUrl);
             try {
-                connection = DriverManager.getConnection(jdbcUrl,user,pass);
+                String user = "root";
+                String pass = "rootpassword";
+                connection = DriverManager.getConnection(jdbcUrl, user, pass);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -28,26 +28,44 @@ public class Database {
         }
     }
 
+    /**
+     *
+     * @param roomID
+     * @throws SQLException
+     */
     public void getPrisoner(int roomID) throws SQLException {
         Statement state = connection.createStatement();
         ResultSet rs = state.executeQuery("SELECT * FROM prisoner WHERE roomID = " + roomID);
         while(rs.next()) {
-            prisoners.add(new Prisoner(rs.getInt("id"), rs.getString("name"), rs.getString("type"), rs.getInt("age"), rs.getInt("roomID"), rs.getDate("startDate"), rs.getDate("endDate")));
+            prisoners.add(
+                    new Prisoner(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("type"),
+                            rs.getInt("age"),
+                            rs.getInt("roomID"),
+                            rs.getDate("startDate"),
+                            rs.getDate("endDate")
+                    )
+            );
         }
-        for (Prisoner prisoner : prisoners) {
-            System.out.println(prisoner.getId() + " " + prisoner.getName() + " " + prisoner.getType() + " " + prisoner.getAge() + " " + prisoner.getRoomID() + " " + prisoner.getStartDate() + " " + prisoner.getEndDate());
-        }
-
     }
 
+    /**
+     *
+     * @throws SQLException
+     */
     public void getRoom() throws SQLException {
         Statement state = connection.createStatement();
         ResultSet rs = state.executeQuery("SELECT * FROM room");
         while(rs.next()) {
-            rooms.add(new Room(rs.getInt("id"), rs.getString("name"), rs.getInt("capacity")));
-        }
-        for (Room room : rooms) {
-            System.out.println(room.getId() + " " + room.getName() + " " + room.getCapacity());
+            rooms.add(
+                    new Room(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getInt("capacity")
+                    )
+            );
         }
     }
 

@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.sql.SQLException;
@@ -32,6 +33,12 @@ public class AppController {
     private Button previousButton;
 
     @FXML
+    private Button nextButton;
+
+    @FXML
+    private HBox root;
+
+    @FXML
     public void initialize() {
         db = new Database();
         try {
@@ -41,9 +48,16 @@ public class AppController {
         }
 
         ArrayList<backend.Room> rooms = db.rooms;
-        HBox btnContainer = new HBox();
+        GridPane btnContainer = new GridPane();
+        btnContainer.setMinWidth(root.getWidth());
+        btnContainer.setVgap(10);
+        btnContainer.setHgap(10);
+        btnContainer.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
+
+        int counter = 0;
         for (backend.Room room : rooms) {
             Button button = new Button(room.getName());
+            button.getStyleClass().add("btn-primary");
             button.setOnAction(e -> {
                 try {
                     db.getPrisoner(room.getId());
@@ -55,14 +69,27 @@ public class AppController {
                 VBox container = new VBox();
                 container.setSpacing(10);
                 container.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
+
                 for (Prisoner prisoner: prisoners) {
                     HBox hbox = new HBox();
+                    Label name = new Label(prisoner.getName());
+                    name.setMinWidth(100);
+                    Label type = new Label(prisoner.getType());
+                    type.setPrefWidth(100);
+
                     hbox.setSpacing(10);
                     HBox.setMargin(hbox, new javafx.geometry.Insets(10, 10, 10, 10));
-                    hbox.getChildren().add(new Label(prisoner.getName()));
-                    SplitPane splitPane = new SplitPane();
-                    splitPane.getItems().add(new Label(prisoner.getType()));
+                    hbox.getChildren().add(name);
+                    HBox splitPane = new HBox();
+                    Pane space = new Pane();
+
+                    space.setMinWidth(root.getWidth() - name.getMinWidth() - type.getPrefWidth());
+
+                    splitPane.getChildren().add(type);
+                    splitPane.getChildren().add(space);
+
                     Button xemthem = new Button("Xem thêm");
+                    xemthem.getStyleClass().add("btn-primary");
 
                     xemthem.setOnAction(event -> {
                         detail.getChildren().clear();
@@ -74,52 +101,35 @@ public class AppController {
                         detail.getChildren().add(new Label("End Date: " + prisoner.getEndDate().toString()));
                     });
 
-                    splitPane.getItems().add(xemthem);
+                    splitPane.getChildren().add(xemthem);
                     hbox.getChildren().add(splitPane);
                     container.getChildren().add(hbox);
                 }
                 scrollPane.setContent(container);
                 roomContainer.getChildren().clear();
                 roomContainer.getChildren().add(scrollPane);
-                previousPage.add(container);
+                previousPage.add(scrollPane);
             });
-            btnContainer.getChildren().add(button);
+            btnContainer.add(button, counter % 4, counter / 4);
+            counter++;
             previousPage.add(btnContainer);
         }
+
         roomContainer.getChildren().add(btnContainer);
-
-
         previousButton.setOnAction(e -> {
+            if(previousPage.isEmpty()) return;
             roomContainer.getChildren().clear();
+            nextPage.add(previousPage.getLast());
             previousPage.removeLast();
-            roomContainer.getChildren().add((Node) previousPage.get(previousPage.size() - 1));
+            roomContainer.getChildren().add((Node) previousPage.getLast());
         });
 
-//        container.setSpacing(10);
-//        container.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
-//        db = new Database();
-//        try {
-//            db.getPrisoner();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        ArrayList<Prisoner> prisoners = db.prisoners;
-//
-//        for (Prisoner prisoner : prisoners) {
-//            Button button = new Button(prisoner.getName());
-//            HBox hbox = new HBox();
-//            hbox.setSpacing(10);
-//            HBox.setMargin(hbox, new javafx.geometry.Insets(10, 10, 10, 10));
-//            hbox.getChildren().add(button);
-//            hbox.getChildren().add(new Label(prisoner.getType()));
-//            hbox.getChildren().add(new Label(prisoner.getAge() + ""));
-//            hbox.getChildren().add(new Label(prisoner.getRoomID() + ""));
-//            hbox.getChildren().add(new Label(prisoner.getStartDate().toString()));
-//            hbox.getChildren().add(new Label(prisoner.getEndDate().toString()));
-//
-//            container.getChildren().add(hbox);
-//        }
-//
-//        System.out.println("Hello");
+        nextButton.setOnAction(e -> {
+            if(nextPage.isEmpty()) return;
+            roomContainer.getChildren().clear();
+            previousPage.add(nextPage.getLast());
+            roomContainer.getChildren().add((Node) nextPage.getLast());
+            nextPage.removeLast();
+        });
     }
 }
