@@ -63,9 +63,52 @@
 }
 
 .btn-primary {
-    -fx-background-color: #007bff;
+    -fx-background-color: #3e3bff;
     -fx-text-fill: #ffffff;
     -fx-font-size: 16px;
     -fx-background-radius: 5px;
     -fx-padding: 5px 10px;
+}
+
+.center {
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+    -fx-content-display: center;
+}
+
+.form {
+    -fx-margin: 20px 0 0 0;
+    -fx-spacing: 5px;
+}
+.form-label {
+    -fx-font-size: 18px;
+    -fx-text-fill: #000000;
+}
+
+.form-control {
+    -fx-background-color: #cccccc;
+    -fx-border-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-font-size: 18px;
+    -fx-padding: 12px 22px;
+}
+
+.form-btn {
+    -fx-padding: 10px 0;
+    -fx-margin: 20px 0 0 0;
+    -fx-background-radius: 8px;
+}
+
+.transparent-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #3e3bff;
+    -fx-font-size: 16px;
+}
+
+.forgot-btn {
+    -fx-padding: 7px 0px 20px;
+}
+
+.register-text {
+    -fx-padding: 10px 0px 0px;
 }

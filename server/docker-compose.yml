@@ -3,12 +3,12 @@ version: '3.8'
 services:
   mysql:
     image: mysql:latest
-    container_name: mysql-container
+    container_name: prisoner
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: phatdev
       MYSQL_DATABASE: prisoner
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
+      MYSQL_USER: phatdev
+      MYSQL_PASSWORD: phatdev
     ports:
       - "3307:3306"
     volumes:

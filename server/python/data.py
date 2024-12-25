@@ -1,4 +1,5 @@
 import random
+import json
 
 def generate_name():
     first_names = [
@@ -41,21 +42,56 @@ def generateStartDate():
     return f"{random.randint(2000, 2020)}-{month}-{day}"
 
 def generateEndDate():
+    start_date = generateStartDate()
+    year = int(start_date.split("-")[0])
     month = random.randint(1, 12)
-    day = random.randint(1, 30)
+    if month == 2:
+        if year % 4 == 0:
+            day = random.randint(1, 29)
+        else:
+            day = random.randint(1, 28)
+    elif month in [4, 6, 9, 11]:
+        day = random.randint(1, 30)
+    else:
+        day = random.randint(1, 31)
     if month < 10:
         month = f"0{month}"
     if day < 10:
         day = f"0{day}"
-    return f"{random.randint(2005, 2025)}-{month}-{day}"
+    
+    year += random.randint(2, 100)
+    return f"{year}-{month}-{day}"
 
 prisoner_data = generate_prisoner_data(100)
 room_data = generate_room_data()
 
-with open("prisoner_data.txt", "w") as f:
-    for prisoner in prisoner_data:
-        f.write(f"({prisoner[0]}, '{prisoner[1]}', '{prisoner[2]}', {prisoner[3]}, {prisoner[4]}, '{generateStartDate()}', '{generateEndDate()}'),\n")
+complete_prisoner_data = []
+complete_room_data = []
 
-with open("room_data.txt", "w") as f:
-    for room in room_data:
-        f.write(f"({room[0]}, '{room[1]}', {room[2]}),\n")
+for prisoner in prisoner_data:
+    complete_prisoner_data.append(
+        {
+            "id": prisoner[0],
+            "name": prisoner[1],
+            "type": prisoner[2],
+            "age": prisoner[3],
+            "roomID": prisoner[4],
+            "startDay": generateStartDate(),
+            "endDay": generateEndDate()
+        }
+    )
+
+for room in room_data:
+    complete_room_data.append(
+        {
+            "id": room[0],
+            "name": room[1],
+            "capacity": room[2],
+        }
+    )
+
+with open("prisoner_data.json", "w") as f:
+    json.dump(complete_prisoner_data, f)
+
+with open("room_data.json", "w") as f:
+    json.dump(complete_room_data, f)

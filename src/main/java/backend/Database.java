@@ -16,8 +16,8 @@ public class Database {
             String jdbcUrl = "jdbc:mysql://localhost:3307/prisoner";
             System.out.println("Connecting to the database: "+ jdbcUrl);
             try {
-                String user = "root";
-                String pass = "rootpassword";
+                String user = "phatdev";
+                String pass = "phatdev";
                 connection = DriverManager.getConnection(jdbcUrl, user, pass);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -44,8 +44,8 @@ public class Database {
                             rs.getString("type"),
                             rs.getInt("age"),
                             rs.getInt("roomID"),
-                            rs.getDate("startDate"),
-                            rs.getDate("endDate")
+                            rs.getDate("startDay"),
+                            rs.getDate("endDay")
                     )
             );
         }

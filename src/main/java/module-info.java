@@ -4,7 +4,9 @@ module prisoner.prisonermanager {
 
     requires org.controlsfx.controls;
     requires org.kordamp.bootstrapfx.core;
+    requires com.fasterxml.jackson.databind;
     requires java.sql;
+    requires java.net.http;
 
     opens prisoner.prisonermanager to javafx.fxml;
     exports prisoner.prisonermanager;
