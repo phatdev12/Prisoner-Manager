@@ -70,6 +70,18 @@
     -fx-padding: 5px 10px;
 }
 
+.welcome-label {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.role-label {
+    -fx-background-color: #3e3bff;
+    -fx-padding: 3px 6px;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 5px;
+}
+
 .center {
     -fx-alignment: center;
     -fx-text-alignment: center;
@@ -111,4 +123,46 @@
 
 .register-text {
     -fx-padding: 10px 0px 0px;
+}
+
+.prisoner-card {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 30, 0, 0, 0);
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+}
+
+.prisoner-name {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.detail-title-big {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.detail-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.detail-content {
+    -fx-font-size: 16px;
+}
+
+.input {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-font-size: 18px;
+    -fx-padding: 12px 22px;
+}
+
+.btn-danger {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 16px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
 }

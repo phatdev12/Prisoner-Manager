@@ -7,6 +7,7 @@ module prisoner.prisonermanager {
     requires com.fasterxml.jackson.databind;
     requires java.sql;
     requires java.net.http;
+    requires java.desktop;
 
     opens prisoner.prisonermanager to javafx.fxml;
     exports prisoner.prisonermanager;

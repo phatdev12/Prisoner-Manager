@@ -1,27 +1,34 @@
 package prisoner.prisonermanager;
 
-import backend.Database;
-import backend.Prisoner;
+import backend.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import prisoner.prisonermanager.pages.Home;
+import prisoner.prisonermanager.pages.Manage;
+import prisoner.prisonermanager.pages.Notice;
+import prisoner.prisonermanager.pages.Rooms;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class AppController {
-    Database db;
     private ArrayList<Object> previousPage = new ArrayList<>();
     private ArrayList<Object> nextPage = new ArrayList<>();
+
     @FXML
-    private Label welcomeText;
+    private Button adminBtn;
+
+    @FXML
+    private Button homeBtn;
+
+    @FXML
+    private VBox welcome;
 
     @FXML
     private VBox roomContainer;
@@ -36,92 +43,73 @@ public class AppController {
     private Button nextButton;
 
     @FXML
+    private Button notice;
+
+    @FXML
     private HBox root;
 
     @FXML
-    public void initialize() {
-        db = new Database();
-        try {
-            db.getRoom();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void initialize() throws JsonProcessingException {
+        adminBtn.setVisible(User.getIsAdmin());
+        notice.setVisible(User.getIsAdmin());
+        String rawStaffData = backend.Server.getStaff(User.getToken(), User.getId());
+        Map<String, Object> staffData = new com.fasterxml.jackson.databind.ObjectMapper().readValue(rawStaffData, Map.class);
+        ArrayList<Map<String, Object>> staffs = (ArrayList<Map<String, Object>>) staffData.get("staff");
+        welcome.setAlignment(Pos.CENTER_LEFT);
+        Label welcomeLabel = new Label("Xin chào ");
+        welcomeLabel.getStyleClass().add("welcome-label");
+        Label roleLabel = new Label("");
+        roleLabel.getStyleClass().add("role-label");
+
+        if(!staffs.isEmpty()) {
+            Map<String, Object> staff = (Map<String, Object>) staffs.getFirst();
+            welcomeLabel.setText("Xin chào " + staff.get("name"));
+            if(User.getIsAdmin()) {
+                roleLabel.setText("Quản trị viên");
+            } else {
+                roleLabel.setText(staff.get("role").toString());
+            }
+        } else {
+            welcomeLabel.setText("Xin chào " + User.getUsername());
+            if (User.getIsAdmin()) {
+                roleLabel.setText("Quản trị viên");
+            } else {
+                roleLabel.setText("Nhân viên");
+            }
         }
 
-        ArrayList<backend.Room> rooms = db.rooms;
-        GridPane btnContainer = new GridPane();
-        btnContainer.setMinWidth(root.getWidth());
-        btnContainer.setVgap(10);
-        btnContainer.setHgap(10);
-        btnContainer.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
+        welcome.getChildren().addAll(welcomeLabel, roleLabel);
 
-        int counter = 0;
-        for (backend.Room room : rooms) {
-            Button button = new Button(room.getName());
-            button.getStyleClass().add("btn-primary");
-            button.setOnAction(e -> {
-                try {
-                    db.getPrisoner(room.getId());
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                ArrayList<Prisoner> prisoners = db.prisoners;
-                ScrollPane scrollPane = new ScrollPane();
-                VBox container = new VBox();
-                container.setSpacing(10);
-                container.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
+        new Home(root, roomContainer, previousPage, nextPage);
 
-                for (Prisoner prisoner: prisoners) {
-                    HBox hbox = new HBox();
-                    Label name = new Label(prisoner.getName());
-                    name.setMinWidth(100);
-                    Label type = new Label(prisoner.getType());
-                    type.setPrefWidth(100);
+        notice.setOnAction(e -> {
+            detail.getChildren().clear();
+            detail.getChildren().add(new Notice());
+        });
+        adminBtn.setOnAction(e -> {
+            previousPage.add(roomContainer.getChildren().getFirst());
+            roomContainer.getChildren().clear();
+            new Manage(roomContainer, previousPage, nextPage);
 
-                    hbox.setSpacing(10);
-                    HBox.setMargin(hbox, new javafx.geometry.Insets(10, 10, 10, 10));
-                    hbox.getChildren().add(name);
-                    HBox splitPane = new HBox();
-                    Pane space = new Pane();
+        });
 
-                    space.setMinWidth(root.getWidth() - name.getMinWidth() - type.getPrefWidth());
-
-                    splitPane.getChildren().add(type);
-                    splitPane.getChildren().add(space);
-
-                    Button xemthem = new Button("Xem thêm");
-                    xemthem.getStyleClass().add("btn-primary");
-
-                    xemthem.setOnAction(event -> {
-                        detail.getChildren().clear();
-                        detail.getChildren().add(new Label("Name: " + prisoner.getName()));
-                        detail.getChildren().add(new Label("Type: " + prisoner.getType()));
-                        detail.getChildren().add(new Label("Age: " + prisoner.getAge()));
-                        detail.getChildren().add(new Label("Room ID: " + prisoner.getRoomID()));
-                        detail.getChildren().add(new Label("Start Date: " + prisoner.getStartDate().toString()));
-                        detail.getChildren().add(new Label("End Date: " + prisoner.getEndDate().toString()));
-                    });
-
-                    splitPane.getChildren().add(xemthem);
-                    hbox.getChildren().add(splitPane);
-                    container.getChildren().add(hbox);
-                }
-                scrollPane.setContent(container);
-                roomContainer.getChildren().clear();
-                roomContainer.getChildren().add(scrollPane);
-                previousPage.add(scrollPane);
-            });
-            btnContainer.add(button, counter % 4, counter / 4);
-            counter++;
-            previousPage.add(btnContainer);
-        }
-
-        roomContainer.getChildren().add(btnContainer);
+        homeBtn.setOnAction(e -> {
+            roomContainer.getChildren().clear();
+            previousPage.clear();
+            nextPage.clear();
+            try {
+                new Home(root, roomContainer, previousPage, nextPage);
+            } catch (JsonProcessingException jsonProcessingException) {
+                jsonProcessingException.printStackTrace();
+            }
+        });
         previousButton.setOnAction(e -> {
             if(previousPage.isEmpty()) return;
             roomContainer.getChildren().clear();
             nextPage.add(previousPage.getLast());
-            previousPage.removeLast();
             roomContainer.getChildren().add((Node) previousPage.getLast());
+            previousPage.removeLast();
+
         });
 
         nextButton.setOnAction(e -> {

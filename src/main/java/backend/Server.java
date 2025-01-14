@@ -43,7 +43,7 @@ public class Server {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(api + "/auth/verify"))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Prisoner " + token)
+                .header("Authorization", "Bearer " + token)
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .build();
         try {
@@ -54,9 +54,101 @@ public class Server {
         }
     }
 
+    public static String getRooms(String token) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/rooms"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    //public
     public static void main(String[] args) {
         // test
         // System.out.println(verify("cGhhc2FDhA==-cGhhc2FDhA==-MTczNTEyMzAxODMxMw=="));
     }
 
+    public static String getPrisoners(String token, String id) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/prisoner/" + id))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String addPrisoner(String token, String name, String age, String room, String type, String startDate, String endDate) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/prisoner"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .POST(HttpRequest.BodyPublishers.ofString("{\"name\": \"" + name + "\", \"age\": " + age + ", \"roomID\": " + room + ", \"type\": \"" + type + "\", \"startDate\": \"" + startDate + "\", \"endDate\": \"" + endDate + "\"}"))
+                .build();
+        System.out.println("{\"name\": \"" + name + "\", \"age\": " + age + ", \"room\": " + room + ", \"type\": \"" + type + "\", \"startDate\": \"" + startDate + "\", \"endDate\": \"" + endDate + "\"}");
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
+            return response.body();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String deletePrisoner(String token, String id) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/prisoner/" + id))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .DELETE()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String updatePrisoner(String token, String id, String name, String age, String room, String type, String startDate, String endDate) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/prisoner/" + id))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .PUT(HttpRequest.BodyPublishers.ofString("{\"name\": \"" + name + "\", \"age\": " + age + ", \"roomID\": " + room + ", \"type\": \"" + type + "\", \"startDate\": \"" + startDate + "\", \"endDate\": \"" + endDate + "\"}"))
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String getStaff(String token, String id) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/staff/" + id))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

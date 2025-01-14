@@ -7,7 +7,7 @@ export default (app: App) => {
         const tokenParts = token?.split(" ");
         console.log(tokenParts)
         if(!tokenParts || tokenParts.length != 2) return error(400, "Token is missing")
-        if(tokenParts[0] !== "Prisoner") return error(400, "Invalid token type")
+        if(tokenParts[0] !== "Bearer") return error(400, "Invalid token type")
         
         const auth = await app.db.auth(tokenParts[1]);
         if(auth === 4003) return error(400, "Auth failed")
@@ -16,6 +16,10 @@ export default (app: App) => {
             return { heartbeatToken }
         }
 
-        return { success: true }
+        return { 
+            success: true,
+            token: tokenParts[1],
+            ...auth
+        }
     })
 }

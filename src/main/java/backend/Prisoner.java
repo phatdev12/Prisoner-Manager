@@ -1,6 +1,10 @@
 package backend;
 
+import javafx.scene.layout.HBox;
+
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Prisoner {
     private int id;
@@ -19,6 +23,9 @@ public class Prisoner {
         this.roomID = roomID;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Prisoner(HBox root, ArrayList<Object> previousPage, ArrayList<Object> nextPage, Map<String, Object> prisoner) {
     }
 
     public int getId() {

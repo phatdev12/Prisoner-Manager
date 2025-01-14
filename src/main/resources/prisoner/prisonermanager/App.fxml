@@ -21,23 +21,19 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="62.0">
                            <children>
-                              <ImageView fitHeight="47.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="31.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@assets/logo.png" />
                                  </image>
                               </ImageView>
                            </children>
                         </VBox>
-                        <Label prefHeight="100.0" prefWidth="103.0" styleClass="sidebar-title" stylesheets="@style.css" text="Quản lý nhà tù" wrapText="true">
-                           <font>
-                              <Font name="Times New Roman" size="12.218181610107422" />
-                           </font>
-                        </Label>
+                        <VBox fx:id="welcome" alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="100.0" prefWidth="141.0" />
                      </children>
                   </HBox>
-                  <Button maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="42.0" prefWidth="201.0" styleClass="sidebar-btn" stylesheets="@style.css" text="Trang chủ" textOverrun="CLIP" wrapText="true">
+                  <Button fx:id="homeBtn" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="42.0" prefWidth="201.0" styleClass="sidebar-btn" stylesheets="@style.css" text="Trang chủ" textOverrun="CLIP" wrapText="true">
                      <effect>
                         <DropShadow blurType="ONE_PASS_BOX" height="0.0" radius="0.0" width="0.0">
                            <color>
@@ -46,7 +42,16 @@
                         </DropShadow>
                      </effect>
                   </Button>
-                  <Button layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="42.0" prefWidth="201.0" styleClass="sidebar-btn" stylesheets="@style.css" text="Quản lý" textOverrun="CLIP" wrapText="true">
+                  <Button fx:id="adminBtn" layoutX="10.0" layoutY="110.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="42.0" prefWidth="201.0" styleClass="sidebar-btn" stylesheets="@style.css" text="Quản lý" textOverrun="CLIP" wrapText="true">
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="0.0" radius="0.0" width="0.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </Button>
+                  <Button fx:id="notice" layoutX="10.0" layoutY="152.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="42.0" prefWidth="201.0" styleClass="sidebar-btn" stylesheets="@style.css" text="Thông báo" textOverrun="CLIP" wrapText="true">
                      <effect>
                         <DropShadow blurType="ONE_PASS_BOX" height="0.0" radius="0.0" width="0.0">
                            <color>
