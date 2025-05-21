@@ -147,12 +147,14 @@ export class Database {
     //   SELECT * FROM user WHERE username = '${username}' AND password = '${password}';
     // `);
     const [rows] = await this.db.execute(`SELECT * FROM user WHERE username = ? AND password = ?`, [username, password]);
-
-    let usernameHex = Buffer.from(username).toString('hex');
-    let passwordHex = Buffer.from(password).toString('hex');
-    usernameHex = Buffer.from(String(Number(usernameHex)-(0x2<<usernameHex.length)), 'hex').toString('base64');
-    passwordHex = Buffer.from(String(Number(passwordHex)-(0x2<<passwordHex.length)), 'hex').toString('base64');
-    let token = usernameHex+"-"+passwordHex+"-";
+    const userInfo = {
+      username: username,
+      id: (rows as RowDataPacket[])[0].id,
+    };
+    const base64 = Buffer.from(JSON.stringify(userInfo)).toString('base64');
+    
+    let token = base64;
+    token += ".";
     const date = new Date();
     
     token += Buffer.from(String(date.getTime())).toString('base64');
@@ -166,19 +168,17 @@ export class Database {
   }
 
   public async auth(token: string) {
-    const tokenParts = token.split("-");
-    const usernameHex = Buffer.from(tokenParts[0], 'base64').toString('hex');
-    const passwordHex = Buffer.from(tokenParts[1], 'base64').toString('hex');
-    const username = Buffer.from(String(Number(usernameHex)+(0x2<<usernameHex.length)), 'hex').toString();
-    const password = Buffer.from(String(Number(passwordHex)+(0x2<<passwordHex.length)), 'hex').toString();
-    const latestLogin = Buffer.from(tokenParts[2], 'base64').toString();
+    const tokenParts = token.split(".");
+    const userInfo = Buffer.from(tokenParts[0], 'base64').toString();
+    const { username, id } = JSON.parse(userInfo);
+    const latestLogin = Buffer.from(tokenParts[1], 'base64').toString();
 
-    console.log(username, password, latestLogin);
+    console.log(username, id, latestLogin);
     // const [rows] = await this.db.execute(`
     //   SELECT * FROM user WHERE username = '${username}' AND password = '${password}';
     // `);
 
-    const [rows] = await this.db.execute(`SELECT * FROM user WHERE username = ? AND password = ?`, [username, password]);
+    const [rows] = await this.db.execute(`SELECT * FROM user WHERE username = ? AND id = ?`, [username, id]);
 
     if((rows as RowDataPacket[]).length === 0) {
       return 4003;

@@ -24,7 +24,7 @@ public class Middleware implements EventListener {
         if(event.getMessage().equals("verify")) {
             File file = new File("src/main/resources/cookie.json");
             Map<String, Object> map = new ObjectMapper().readValue(file, Map.class);
-            if(map.get("token") != "") {
+            if(map.get("token") != null) {
                 String token = (String) map.get("token");
                 String rawVerify = (String) Server.verify(token);
                 if(rawVerify == null) {

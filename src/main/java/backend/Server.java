@@ -48,6 +48,7 @@ public class Server {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.body());
             return response.body();
         } catch (Exception e) {
             return null;
