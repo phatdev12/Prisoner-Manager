@@ -4,12 +4,12 @@ import { App } from "./Elysia";
 const app = new App();
 const clients = new Set<any>();
 
-const server = Bun.serve({
-    port: 3001,
+Bun.serve({
+    port: 3000,
     fetch(req, server) {
         if (server.upgrade(req)) return;
-        return new Response("Expected a WebSocket connection", { status: 426 });
-    },
+        return app.handle(req);
+    },  
     websocket: {
         open(ws) {
             console.log("Client connected");
@@ -31,6 +31,5 @@ const server = Bun.serve({
 });
 
 app.dynamicRoutes();
-app.listen(3000);
 
 console.log("Server da duoc khoi dong");

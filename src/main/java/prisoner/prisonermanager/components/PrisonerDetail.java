@@ -30,6 +30,7 @@ public class PrisonerDetail extends VBox {
         Label endDate = new Label(prisoner.get("endDay").toString());
         endDate.getStyleClass().add("detail-content");
 
+        setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
         getChildren().addAll(title, nameTitle, name, typeTitle, type, ageTitle, age, startDateTitle, startDate, endDateTitle, endDate);
     }
 }

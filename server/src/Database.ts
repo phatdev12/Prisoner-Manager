@@ -205,7 +205,18 @@ export class Database {
     };
   }
   // staff
-  async addStaff(userID: string, name: string, age: number, role: string, salary: number, startDay: string, endDay: string) {
+  async addStaff(name: string, age: number, role: string, salary: number, startDay: string, endDay: string) {
+    const [rows] = await this.db.execute(`SELECT * FROM user WHERE username = ?`, [name]);
+    if((rows as RowDataPacket[]).length === 0) {
+      return 4003;
+    }
+    const userID = (rows as RowDataPacket[])[0].id;
+
+    const [staffRows] = await this.db.execute(`SELECT * FROM staff WHERE userID = ?`, [userID]);
+    if((staffRows as RowDataPacket[]).length > 0) {
+      return 4004;
+    }
+    
     await this.db.execute(`INSERT INTO staff (userID, name, age, role, salary, startDay, endDay) VALUES (?, ?, ?, ?, ?, ?, ?)`, [userID, name, age, role, salary, startDay, endDay]);
   }
 

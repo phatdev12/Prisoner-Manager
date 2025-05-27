@@ -138,6 +138,21 @@ public class Server {
         }
     }
 
+    public static String getStaffList(String token) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/staff"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.body();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static String getStaff(String token, String id) {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(api + "/staff/" + id))
@@ -150,6 +165,22 @@ public class Server {
             return response.body();
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static void addStaff(String token, String name, String age, String salary, String role, String startDay, String endDay) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(api + "/staff"))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .POST(HttpRequest.BodyPublishers.ofString("{\"name\": \"" + name + "\", \"age\": " + age + ", \"salary\": " + salary + ", \"role\": \"" + role + "\", \"startDate\": \"" + startDay + "\", \"endDate\": \"" + endDay + "\"}"))
+                .build();
+
+        System.out.println("{\"name\": \"" + name + "\", \"age\": " + age + ", \"salary\": " + salary + ", \"role\": \"" + role + "\", \"startDate\": \"" + startDay + "\", \"endDate\": \"" + endDay + "\"}");
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            response.body();
+        } catch (Exception e) {
         }
     }
 }

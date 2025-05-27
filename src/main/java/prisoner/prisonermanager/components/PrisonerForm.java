@@ -98,6 +98,7 @@ public class PrisonerForm extends VBox {
             }
         });
 
+        setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
         getChildren().addAll(title, nameTitle, name, typeTitle, type, ageTitle, age, startDateTitle, startDate, endDateTitle, endDate, cellTitle, cell, editPrisoner);
     }
 }
