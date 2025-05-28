@@ -20,6 +20,10 @@ import java.util.Map;
 public class AppController {
     private ArrayList<Object> previousPage = new ArrayList<>();
     private ArrayList<Object> nextPage = new ArrayList<>();
+//    private ChatService chatService;
+//    private SocketService socketService;
+//    private ObservableList<ChatRoom> chatRooms;
+//    private ChatRoom currentChatRoom;
 
     @FXML
     private Button adminBtn;

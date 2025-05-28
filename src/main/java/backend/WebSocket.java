@@ -12,7 +12,7 @@ public class WebSocket {
 
     public static void connect() {
         ws = client.newWebSocketBuilder()
-                .buildAsync(URI.create(url), new WebSocketEvent())
+                .buildAsync(URI.create(url+"?userId="+User.getId()), new WebSocketEvent())
                 .join();
     }
 

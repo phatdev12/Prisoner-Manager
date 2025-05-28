@@ -22,6 +22,7 @@ public class PrisonerCard extends HBox {
         setMinWidth(Core.root.lookup("#roomContainer").getLayoutBounds().getWidth() - 80);
         Label prisonerName = new Label((String) prisoner.get("name"));
         prisonerName.getStyleClass().add("prisoner-name");
+
         Button prisonerButton = new Button("Xem chi tiết");
         prisonerButton.getStyleClass().add("btn-primary");
         prisonerButton.setOnAction(e -> {

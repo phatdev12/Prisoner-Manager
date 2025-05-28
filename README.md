@@ -1,9 +1,10 @@
 # Prisoner Manager Using JavaFX
 
-Đồ án OOP học kỳ 1 của Trường Đại Học Công Nghệ Thông Tin Và Truyền Thông Việt-Hàn. 
+Đồ án cơ sở Trường Đại Học Công Nghệ Thông Tin Và Truyền Thông Việt-Hàn. 
 
 ## Mô tả đồ án
-Dự án này sử dụng JavaFX để tạo giao diện cho ứng dụng quản lý tù nhân. Ứng dụng này cho phép người dùng thêm, sửa, xóa và tìm kiếm thông tin tù nhân.
+Dự án này sử dụng JavaFX để tạo giao diện cho ứng dụng quản lý tù nhân. Ứng dụng này cho phép người dùng thêm, sửa, xóa và tìm kiếm thông tin tù nhân và thông báo cho các nhân sự liên quan.
+Dự án này cũng sử dụng MySQL để lưu trữ dữ liệu và ElysiaJS để tạo API cho ứng dụng. Ngoài ra, dự án còn sử dụng Python để xử lý một số tác vụ và Bun để quản lý các gói.
 Một cuộc mô phỏng nho nhỏ chắc chắn trong thực tế sẽ phức tạp hơn nhưng tóm lại dự án có những thứ cơ bản mà một ứng dụng quản lý nhà tù cần có.
 
 ## Dự án này sử dụng
