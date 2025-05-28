@@ -47,5 +47,17 @@ bun dev
 #### 5. Chạy ứng dụng
 Mở IntelliJ IDEA và chạy ứng dụng
 
+#### 6. Ủng hộ để phát triển thêm.
+Nếu bạn thấy dự án này hữu ích, hãy ủng hộ chúng tôi bằng cách sao chép và sử dụng nó. Bạn có thể sao chép mã nguồn và sử dụng nó cho mục đích học tập hoặc phát triển ứng dụng của riêng bạn.
+
+Nếu bạn muốn ủng hộ chúng tôi, hãy sao chép mã nguồn và sử dụng nó cho mục đích học tập hoặc phát triển ứng dụng của riêng bạn. Chúng tôi rất vui khi thấy dự án này được sử dụng và phát triển thêm.
+
+Nếu bạn có tấm lòng muốn ủng hộ thì có thể chuyển khoản cho chúng tôi qua tài khoản ngân hàng sau:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fd3e5b37-08f8-45b0-aa31-ab350e663b54" width="400"/>
+  <img src="https://github.com/user-attachments/assets/dc87a3ad-f55c-4557-b8e9-7f23aa04cd5d" width="400"/>
+</p>
+
 ## Tác giả
-Bản quyền thuộc về `Từ Thắng Phát`. 
+Bản quyền thuộc về `Từ Thắng Phát`, `Trịnh Công Kiền`.
