@@ -56,7 +56,7 @@ public class App extends Application {
                 JsonNode verify = mapper.readTree(rawVerify);
 
                 if(verify.has("success") && verify.get("success").asBoolean()) {
-                    User.init(verify.get("id").asText(), verify.get("username").asText(), verify.get("token").asText(), verify.get("admin").asBoolean());
+                    User.init(verify.get("id").asText(), verify.get("username").asText(), verify.get("token").asText(), Boolean.valueOf(verify.get("admin").asBoolean()));
                     loadApp(stage);
                 }
                 else loadAuth(stage);
