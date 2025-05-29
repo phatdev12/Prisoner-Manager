@@ -7,7 +7,6 @@ import javafx.scene.layout.VBox;
 
 public class PrisonerManage extends ScrollPane {
     public PrisonerManage(VBox roomContainer) {
-        roomContainer.getChildren().clear();
         VBox container = new VBox();
         container.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
         container.setSpacing(10);
@@ -79,7 +78,7 @@ public class PrisonerManage extends ScrollPane {
         });
 
         container.getChildren().addAll(title, nameTitle, prisonerName, typeTitle, prisonerType, ageTitle, prisonerAge, startDateTitle, prisonerStartDay, endDateTitle, prisonerEndDay, cellTitle, prisonerCell, addPrisoner);
-        this.setContent(container);
-        roomContainer.getChildren().addAll(this);
+        setContent(container);
+        roomContainer.getChildren().add(this);
     }
 }

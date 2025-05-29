@@ -166,3 +166,10 @@
     -fx-background-radius: 5px;
     -fx-padding: 5px 10px;
 }
+
+.feature-card {
+    -fx-background-color: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 30, 0, 0, 0);
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+}

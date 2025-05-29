@@ -27,7 +27,68 @@ export class Database {
           endDay DATE NOT NULL
         );
       `);
-        
+
+      this.db.execute(`
+        CREATE TABLE IF NOT EXISTS chat_rooms (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          type ENUM('private', 'group') NOT NULL,
+          createdDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          createdBy VARCHAR(255) NOT NULL,
+          FOREIGN KEY (createdBy) REFERENCES user(id)
+        )
+      `);
+
+      this.db.execute(`
+        CREATE TABLE IF NOT EXISTS chat_members (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          chatRoomId INT NOT NULL,
+          userId VARCHAR(255) NOT NULL,
+          joinedDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          isActive BOOLEAN DEFAULT TRUE,
+          FOREIGN KEY (chatRoomId) REFERENCES chat_rooms(id) ON DELETE CASCADE,
+          FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE,
+          UNIQUE KEY unique_member (chatRoomId, userId)
+        )
+      `);
+
+      this.db.execute(`
+        CREATE TABLE IF NOT EXISTS chat_messages (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          chatRoomId INT NOT NULL,
+          senderId VARCHAR(255) NOT NULL,
+          content TEXT NOT NULL,
+          sentDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          isRead BOOLEAN DEFAULT FALSE,
+          FOREIGN KEY (chatRoomId) REFERENCES chat_rooms(id) ON DELETE CASCADE,
+          FOREIGN KEY (senderId) REFERENCES user(id) ON DELETE CASCADE
+        )
+      `);
+
+      this.db.execute(`
+        CREATE TABLE IF NOT EXISTS chat_read_status (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          messageId INT NOT NULL,
+          userId VARCHAR(255) NOT NULL,
+          readDate DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (messageId) REFERENCES chat_messages(id) ON DELETE CASCADE,
+          FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE,
+          UNIQUE KEY unique_read (messageId, userId)
+        )
+      `);
+
+      this.db.execute(`
+        CREATE TABLE IF NOT EXISTS online_users (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          userId VARCHAR(255) NOT NULL,
+          socketId VARCHAR(255) NOT NULL,
+          lastSeen DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          isOnline BOOLEAN DEFAULT TRUE,
+          FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE,
+          UNIQUE KEY unique_user (userId)
+        )
+      `);
+          
       this.db.execute(`
         CREATE TABLE IF NOT EXISTS room (
           id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -205,7 +266,18 @@ export class Database {
     };
   }
   // staff
-  async addStaff(userID: string, name: string, age: number, role: string, salary: number, startDay: string, endDay: string) {
+  async addStaff(name: string, age: number, role: string, salary: number, startDay: string, endDay: string) {
+    const [rows] = await this.db.execute(`SELECT * FROM user WHERE username = ?`, [name]);
+    if((rows as RowDataPacket[]).length === 0) {
+      return 4003;
+    }
+    const userID = (rows as RowDataPacket[])[0].id;
+
+    const [staffRows] = await this.db.execute(`SELECT * FROM staff WHERE userID = ?`, [userID]);
+    if((staffRows as RowDataPacket[]).length > 0) {
+      return 4004;
+    }
+    
     await this.db.execute(`INSERT INTO staff (userID, name, age, role, salary, startDay, endDay) VALUES (?, ?, ?, ?, ?, ?, ?)`, [userID, name, age, role, salary, startDay, endDay]);
   }
 
@@ -273,11 +345,102 @@ export class Database {
       DELETE FROM prisoner WHERE id = ?;
     `, [id]);
   }
-
     
   async rooms() {
     // const [rows] = await this.db.execute(`SELECT * FROM room`);
     const [rows] = await this.db.execute(`SELECT * FROM room`);
+    return rows;
+  }
+
+  async createPrivateRoom(userId: string, otherUserId: string) {
+    const [existingRoom] = await this.db.execute(`
+      SELECT cr.* FROM chat_rooms cr
+      JOIN chat_members cm ON cr.id = cm.chatRoomId
+      WHERE (cm.userId = ? OR cm.userId = ?) AND cr.type = 'private'
+      GROUP BY cr.id
+    `, [userId, otherUserId]);
+
+    if((existingRoom as RowDataPacket[]).length > 0) {
+      return existingRoom;
+    }
+
+    const [rows] = await this.db.execute(`
+      INSERT INTO chat_rooms (name, type, createdBy) VALUES (?, 'private', ?)
+    `, [`Private Chat ${userId}-${otherUserId}`, userId]);
+
+    const chatRoomId = (rows as RowDataPacket).insertId;
+
+    await this.addChatMember(chatRoomId, userId);
+    await this.addChatMember(chatRoomId, otherUserId);
+
+    return { id: chatRoomId };
+  }
+
+  async createGroupRoom(name: string, userId: string, members: string[]) {
+    const [rows] = await this.db.execute(`
+      INSERT INTO chat_rooms (name, type, createdBy) VALUES (?, 'group', ?)
+    `, [name, userId]);
+
+    const chatRoomId = (rows as RowDataPacket).insertId;
+
+    await this.addChatMember(chatRoomId, userId);
+    for(const member of members) {
+      await this.addChatMember(chatRoomId, member);
+    }
+
+    return { id: chatRoomId };
+  }
+
+  async createChatRoom(name: string, type: 'private' | 'group', createdBy: string) {
+    const [rows] = await this.db.execute(`INSERT INTO chat_rooms (name, type, createdBy) VALUES (?, ?, ?)`, [name, type, createdBy]);
+    return rows;
+  }
+
+  async addChatMember(chatRoomId: number, userId: string) {
+    const [rows] = await this.db.execute(`INSERT INTO chat_members (chatRoomId, userId) VALUES (?, ?)`, [chatRoomId, userId]);
+    return rows;
+  }
+
+  async getUserChatRooms(userId: string) {
+    const [rows] = await this.db.execute(`
+      SELECT cr.* FROM chat_rooms cr
+      JOIN chat_members cm ON cr.id = cm.chatRoomId
+      WHERE cm.userId = ? AND cm.isActive = TRUE
+    `, [userId]);
+
+    if((rows as RowDataPacket[]).length === 0) {
+      return 4003;
+    }
+    
+    
+    return rows;
+  }
+
+  async getChatRoomMessages(chatRoomId: string) {
+    const [rows] = await this.db.execute(`
+      SELECT cm.*, u.username FROM chat_messages cm
+      JOIN user u ON cm.senderId = u.id
+      WHERE cm.chatRoomId = ?
+      ORDER BY cm.sentDate ASC
+    `, [chatRoomId]);
+    
+    return rows;
+  }
+
+  async sendMessage(chatRoomId: string, senderId: string, content: string) {
+    const [rows] = await this.db.execute(`
+      INSERT INTO chat_messages (chatRoomId, senderId, content) VALUES (?, ?, ?)
+    `, [chatRoomId, senderId, content]);
+    
+    return rows;
+  }
+
+  async markMessageAsRead(messageId: string, userId: string) {
+    const [rows] = await this.db.execute(`
+      INSERT INTO chat_read_status (messageId, userId) VALUES (?, ?)
+      ON DUPLICATE KEY UPDATE readDate = CURRENT_TIMESTAMP
+    `, [messageId, userId]);
+    
     return rows;
   }
 }

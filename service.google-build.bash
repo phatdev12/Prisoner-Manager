@@ -1,0 +1,1 @@
+python -m PyInstaller --onefile --noconsole service/tts.py --distpath src/main/resources/google-service --name google-tts

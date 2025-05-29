@@ -6,13 +6,13 @@ import java.net.URI;
 import java.net.http.HttpClient;
 
 public class WebSocket {
-    private static String url = "ws://localhost:3001";
+    private static String url = "ws://localhost:3000";
     public static HttpClient client = HttpClient.newHttpClient();
     public static java.net.http.WebSocket ws;
 
     public static void connect() {
         ws = client.newWebSocketBuilder()
-                .buildAsync(URI.create(url), new WebSocketEvent())
+                .buildAsync(URI.create(url+"?userId="+User.getId()), new WebSocketEvent())
                 .join();
     }
 

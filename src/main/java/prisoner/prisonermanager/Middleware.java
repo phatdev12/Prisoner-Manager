@@ -2,6 +2,7 @@ package prisoner.prisonermanager;
 
 import backend.Server;
 import backend.User;
+import backend.WebSocket;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.stage.Stage;
@@ -37,6 +38,7 @@ public class Middleware implements EventListener {
                 if(verify.get("success").asBoolean()) {
                     User.init(verify.get("id").asText(), verify.get("username").asText(), verify.get("token").asText(), verify.get("admin").asBoolean());
                     app.loadApp(stage);
+                    WebSocket.connect();
                 }
             }
         }

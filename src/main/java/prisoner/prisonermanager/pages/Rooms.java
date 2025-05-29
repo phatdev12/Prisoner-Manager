@@ -17,6 +17,7 @@ import java.util.Map;
 public class Rooms extends GridPane {
     public Rooms(HBox root, ArrayList<Object> previousPage, ArrayList<Object> nextPage) throws JsonProcessingException {
         setMinWidth(root.getWidth());
+        setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
         setVgap(10);
         setHgap(10);
         String rawRoomData = Server.getRooms(User.getToken());

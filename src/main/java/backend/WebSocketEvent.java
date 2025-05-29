@@ -8,11 +8,14 @@ import javafx.stage.Stage;
 import prisoner.prisonermanager.App;
 
 import javax.sound.sampled.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.http.WebSocket;
 import java.nio.ByteBuffer;
 import java.nio.file.Paths;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CompletionStage;
 
 public class WebSocketEvent implements WebSocket.Listener {
@@ -64,15 +67,11 @@ public class WebSocketEvent implements WebSocket.Listener {
     }
 
     private void showNotification(String message) {
+        ProcessBuilder pb = new ProcessBuilder("src/main/resources/google-service/google-tts", message);
         Stage notificationStage = new Stage();
         playAudioFromResources("notice.wav", notificationStage);
-        Text notificationText = new Text(message);
-        notificationText.setStyle("-fx-font-size: 48; -fx-fill: white;");
 
-        StackPane notificationPane = new StackPane(notificationText);
-        notificationPane.setStyle("-fx-background-color: red;");
-
-        Scene notificationScene = new Scene(notificationPane, 600, 400);
+        Scene notificationScene = getScene(message, pb);
         notificationStage.setScene(notificationScene);
         notificationStage.setFullScreen(true);
 
@@ -88,6 +87,34 @@ public class WebSocketEvent implements WebSocket.Listener {
         }).start();
     }
 
+    private static Scene getScene(String message, ProcessBuilder pb) {
+        Timer timer = new Timer();
+        final int[] count = {0};
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                count[0]++;
+                try {
+                    pb.start();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                if(count[0] >= 5) {
+                    timer.cancel();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 1000, 5000);
+        Text notificationText = new Text(message);
+        notificationText.setStyle("-fx-font-size: 48; -fx-fill: white;");
+
+        StackPane notificationPane = new StackPane(notificationText);
+        notificationPane.setStyle("-fx-background-color: red;");
+
+        Scene notificationScene = new Scene(notificationPane, 600, 400);
+        return notificationScene;
+    }
+
     private void playAudioFromResources(String resourceFileName, Stage stage) {
         try {
             URL resource = Paths.get("src/main/resources/" + resourceFileName).toUri().toURL();
@@ -98,6 +125,15 @@ public class WebSocketEvent implements WebSocket.Listener {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(resource);
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
+
+            FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float volume = volumeControl.getValue();
+            volumeControl.setValue(volume - 4.0f);
+            clip.addLineListener(event -> {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    clip.close();
+                }
+            });
             clip.start();
 
             stage.setOnCloseRequest(event -> clip.stop());

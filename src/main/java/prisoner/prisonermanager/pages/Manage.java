@@ -7,7 +7,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
-public class Manage {
+public class Manage extends VBox {
     public Manage(VBox roomContainer, ArrayList<Object> previousPage, ArrayList<Object> nextPage) {
         HBox staffCard = new HBox();
         staffCard.getStyleClass().add("prisoner-card");
@@ -16,6 +16,11 @@ public class Manage {
         staffTitle.getStyleClass().add("prisoner-name");
         Button staffButton = new Button("Truy cập");
         staffButton.getStyleClass().add("btn-primary");
+        staffButton.setOnAction(e -> {
+            previousPage.add(this);
+            roomContainer.getChildren().clear();
+            new StaffManage(roomContainer);
+        });
         staffCard.getChildren().addAll(staffTitle, staffButton);
 
         HBox prisonerCard = new HBox();
@@ -28,13 +33,14 @@ public class Manage {
         prisonerCard.getChildren().addAll(prisonerTitle, prisonerButton);
         prisonerButton.setOnAction(e -> {
             previousPage.add(this);
+            roomContainer.getChildren().clear();
             new PrisonerManage(roomContainer);
         });
 
-
-        roomContainer.setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
-        roomContainer.setSpacing(10);
-        roomContainer.getChildren().addAll(staffCard, prisonerCard);
+        setPadding(new javafx.geometry.Insets(15, 15, 15, 15));
+        setSpacing(10);
+        getChildren().addAll(staffCard, prisonerCard);
+        roomContainer.getChildren().add(this);
     }
 
 }
