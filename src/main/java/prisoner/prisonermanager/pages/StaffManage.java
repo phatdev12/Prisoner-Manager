@@ -15,7 +15,7 @@ public class StaffManage extends ScrollPane {
         Label title = new Label("Thêm nhân viên");
         title.getStyleClass().add("detail-title-big");
 
-        Label nameTitle = new Label("Họ và tên:");
+        Label nameTitle = new Label("Username");
         nameTitle.getStyleClass().add("detail-title");
 
         TextField staffName = new TextField();
@@ -70,7 +70,7 @@ public class StaffManage extends ScrollPane {
                     Server.addStaff(User.getToken(), staffName.getText(), staffAge.getText(), staffSalary.getText(), staffPosition.getText(), staffStartDay.getValue().toString(), staffEndDay.getValue().toString());
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Thành công");
-                    alert.setHeaderText("Thêm tù nhân thành công");
+                    alert.setHeaderText("Thêm nhân viên thành công");
                     alert.onHiddenProperty().set(e2 -> {
                         staffName.clear();
                         staffPosition.clear();

@@ -12,6 +12,7 @@ tts.write_to_fp(fp)
 fp.seek(0)
 
 pygame.mixer.init()
+pygame.mixer.music.set_volume(1.0) 
 pygame.mixer.music.load(fp)
 pygame.mixer.music.play()
 

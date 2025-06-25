@@ -1,6 +1,8 @@
 import { createConnection, RowDataPacket, Connection } from "mysql2/promise";
 import fs from 'fs';
+import crypto from "crypto";
 import path from "path";
+import { hashPassword, verifyPassword } from "./utils/security";
 
 export class Database {
   public db!: Connection;
@@ -16,6 +18,15 @@ export class Database {
       });
 
       this.db.connect();
+      this.db.execute(`
+        CREATE TABLE IF NOT EXISTS user (
+          id VARCHAR(255) PRIMARY KEY, 
+          username VARCHAR(255) NOT NULL, 
+          password VARCHAR(128) NOT NULL,
+          salt VARCHAR(32) NOT NULL,
+          admin BOOLEAN DEFAULT FALSE
+        );
+      `);
       this.db.execute(`
         CREATE TABLE IF NOT EXISTS prisoner (
           id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -94,15 +105,6 @@ export class Database {
           id INT AUTO_INCREMENT PRIMARY KEY, 
           name VARCHAR(255) NOT NULL, 
           capacity INT NOT NULL
-        );
-      `);
-  
-      this.db.execute(`
-        CREATE TABLE IF NOT EXISTS user (
-          id VARCHAR(255) PRIMARY KEY, 
-          username VARCHAR(255) NOT NULL, 
-          password VARCHAR(255) NOT NULL,
-          admin BOOLEAN DEFAULT FALSE
         );
       `);
 
@@ -194,7 +196,9 @@ export class Database {
     if((rows as RowDataPacket[]).length === 0) {
       const id = crypto.randomUUID();
       // await this.db.execute(`INSERT INTO user (id, username, password) VALUES ('${id}', '${username}', '${password}')`);
-      await this.db.execute(`INSERT INTO user (id, username, password) VALUES (?, ?, ?)`, [id, username, password]);
+      const { hash, salt } = hashPassword(password);
+
+      await this.db.execute(`INSERT INTO user (id, username, password, salt) VALUES (?, ?, ?, ?)`, [id, username, hash, salt]);
 
       const login = await this.login(username, password);
       return login;
@@ -207,10 +211,22 @@ export class Database {
     // const [rows] = await this.db.execute(`
     //   SELECT * FROM user WHERE username = '${username}' AND password = '${password}';
     // `);
-    const [rows] = await this.db.execute(`SELECT * FROM user WHERE username = ? AND password = ?`, [username, password]);
+    const cleanPassword = password.trim();
+    const [userRows] = await this.db.execute(`SELECT * FROM user WHERE username = ?`, [username]);
+    if((userRows as RowDataPacket[]).length === 0) {
+      return 4003;
+    }
+
+    const user = (userRows as RowDataPacket[])[0];
+
+    const verify = verifyPassword(password, user.salt, user.password);
+    if(!verify) {
+      return 4003;
+    }
+    
     const userInfo = {
       username: username,
-      id: (rows as RowDataPacket[])[0].id,
+      id: user.id,
     };
     const base64 = Buffer.from(JSON.stringify(userInfo)).toString('base64');
     
@@ -219,7 +235,7 @@ export class Database {
     const date = new Date();
     
     token += Buffer.from(String(date.getTime())).toString('base64');
-    if((rows as RowDataPacket[]).length > 0) {
+    if(user) {
       // await this.db.execute(`INSERT INTO log (token) VALUES ('${token}')`);
       await this.db.execute(`INSERT INTO log (token) VALUES (?)`, [token]);
       return token;

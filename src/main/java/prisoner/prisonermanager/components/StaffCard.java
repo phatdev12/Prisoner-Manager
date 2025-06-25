@@ -11,7 +11,7 @@ public class StaffCard extends HBox {
         setStyle("-fx-padding: 10; -fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-radius: 5; -fx-background-radius: 5;");
 
         String name = staff.get("name").toString();
-        String position = staff.get("role").toString();
+        String position = staff.get("roLe").toString();
 
         Label nameLabel = new Label(name);
         nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
