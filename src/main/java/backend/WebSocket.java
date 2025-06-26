@@ -6,7 +6,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 
 public class WebSocket {
-    private static String url = "ws://localhost:3000";
+    private static String url = "wss://favourites-car-bid-gospel.trycloudflare.com";
     public static HttpClient client = HttpClient.newHttpClient();
     public static java.net.http.WebSocket ws;
 

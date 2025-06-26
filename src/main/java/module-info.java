@@ -8,6 +8,9 @@ module prisoner.prisonermanager {
     requires java.sql;
     requires java.net.http;
     requires java.desktop;
+    requires com.google.gson;
+    requires org.commonmark;
+    requires javafx.web;
 
     opens prisoner.prisonermanager to javafx.fxml;
     exports prisoner.prisonermanager;

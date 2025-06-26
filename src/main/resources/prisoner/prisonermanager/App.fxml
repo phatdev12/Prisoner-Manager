@@ -60,6 +60,15 @@
                         </DropShadow>
                      </effect>
                   </Button>
+                  <Button fx:id="chatAI" layoutX="10.0" layoutY="152.0" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="42.0" prefWidth="201.0" styleClass="sidebar-btn" stylesheets="@style.css" text="ChatAI" textOverrun="CLIP" wrapText="true">
+                     <effect>
+                        <DropShadow blurType="ONE_PASS_BOX" height="0.0" radius="0.0" width="0.0">
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </DropShadow>
+                     </effect>
+                  </Button>
                </children>
             </VBox>
          </children>

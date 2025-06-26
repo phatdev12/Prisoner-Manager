@@ -9,15 +9,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import prisoner.prisonermanager.pages.Home;
-import prisoner.prisonermanager.pages.Manage;
-import prisoner.prisonermanager.pages.Notice;
-import prisoner.prisonermanager.pages.Rooms;
+import prisoner.prisonermanager.pages.*;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class AppController {
+    public Button chatAI;
     private ArrayList<Object> previousPage = new ArrayList<>();
     private ArrayList<Object> nextPage = new ArrayList<>();
 //    private ChatService chatService;
@@ -95,6 +93,12 @@ public class AppController {
             roomContainer.getChildren().clear();
             new Manage(roomContainer, previousPage, nextPage);
 
+        });
+
+        chatAI.setOnAction(e -> {
+           previousPage.add(roomContainer.getChildren().getFirst());
+           roomContainer.getChildren().clear();
+           new AIChatPage(roomContainer, previousPage, nextPage);
         });
 
         homeBtn.setOnAction(e -> {

@@ -6,7 +6,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class Server {
-    private static final String api = "http://localhost:3000";
+    private static final String api = "https://favourites-car-bid-gospel.trycloudflare.com";
     private static  final HttpClient client = HttpClient.newHttpClient();
 
     public static String register(String username, String password) {
